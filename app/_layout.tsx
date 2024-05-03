@@ -1,14 +1,13 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Link, Stack, router } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-
-import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
-import { TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { StatusBar } from 'expo-status-bar';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -23,11 +22,15 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+
+  const router = useRouter();
+  const { authState, onLogOut } = useAuth();
+  const segments = useSegments();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -40,58 +43,55 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
+  useEffect(() => {
+    if (!authState) return;
+
+    const inAuthGroup = segments[0] === '(authenticated)';
+
+    if (authState && !inAuthGroup) {
+      router.replace('/(authenticated)/(tabs)/home');
+    } else if (!authState) {
+      router.replace('/');
+    }
+  }, [authState]);
+
+  if (!loaded || !authState) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={Colors.light.background} />
+      </View>
+    );
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
   return (
-    <AuthProvider>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false, title:'' }} />
-        <Stack.Screen
-          name="signup"
-          options={{
-            title: '',
-            headerBackTitle: '',
-            headerShadowVisible: false,
-            headerStyle: { backgroundColor: Colors.light.tabIconDefault },
-            headerLeft: () => (
-              <TouchableOpacity onPress={router.back}>
-                <Ionicons name="arrow-back" size={34} />
-              </TouchableOpacity>
-            ),
-          }}
-          />
-        <Stack.Screen
-          name="login"
-          options={{
-            title: '',
-            headerBackTitle: '',
-            headerShadowVisible: false,
-            headerStyle: { backgroundColor: Colors.light.background },
-            headerLeft: () => (
-              <TouchableOpacity onPress={router.back}>
-                <Ionicons name="arrow-back" size={34} />
-              </TouchableOpacity>
-            ),
-            /*
-            headerRight: () => (
-              <Link href={'/help'} asChild>
-              <TouchableOpacity>
-              <Ionicons name="help-circle-outline" size={34} />
-              </TouchableOpacity>
-              </Link>
-              ),
-              */
-            }}
-            />
-
-
-      </Stack>
-    </AuthProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false, title: '' }} />
+      <Stack.Screen
+        name="login"
+        options={{
+          title: '',
+          headerBackTitle: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.light.background },
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="arrow-back" size={34} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen name="(authenticated)/(tabs)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
+
+const RootLayoutNav = () => {
+  return (
+      <AuthProvider>
+        <StatusBar style='auto'/>
+        <InitialLayout />
+      </AuthProvider>
+  );
+}
+
+export default RootLayoutNav;
