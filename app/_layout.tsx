@@ -8,6 +8,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthProvider } from '@/context/AuthContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,9 +48,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
+    <AuthProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false, title:'' }} />
         <Stack.Screen
@@ -65,7 +65,7 @@ function RootLayoutNav() {
               </TouchableOpacity>
             ),
           }}
-        />
+          />
         <Stack.Screen
           name="login"
           options={{
@@ -81,16 +81,17 @@ function RootLayoutNav() {
             /*
             headerRight: () => (
               <Link href={'/help'} asChild>
-                <TouchableOpacity>
-                  <Ionicons name="help-circle-outline" size={34} />
-                </TouchableOpacity>
+              <TouchableOpacity>
+              <Ionicons name="help-circle-outline" size={34} />
+              </TouchableOpacity>
               </Link>
-            ),
-            */
-          }}
-        />
+              ),
+              */
+            }}
+            />
 
 
       </Stack>
+    </AuthProvider>
   );
 }
