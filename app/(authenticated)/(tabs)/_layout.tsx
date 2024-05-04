@@ -20,26 +20,16 @@ const Layout = () => {
     return <Redirect href="/" />;
   }
 
-
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: Colors.light.background }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: Colors.dark.background }}>
       <Tabs.Screen
         name="home"
         options={{
           title: "Home",
           tabBarIcon: ({ size, color }) => (
-            <FontAwesome name="registered" size={size} color={color} />
+            <FontAwesome name="home" size={size} color={color} />
           ),
-          headerTransparent: true,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "profile",
-          tabBarIcon: ({ size, color }) => (
-            <FontAwesome name="line-chart" size={size} color={color} />
-          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -47,8 +37,19 @@ const Layout = () => {
         options={{
           title: "store",
           tabBarIcon: ({ size, color }) => (
-            <FontAwesome name="exchange" size={size} color={color} />
+            <FontAwesome name="shopping-bag" size={size} color={color} />
           ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          title: "cart",
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome name="shopping-cart" size={size} color={color} />
+          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -56,8 +57,9 @@ const Layout = () => {
         options={{
           title: "settings",
           tabBarIcon: ({ size, color }) => (
-            <FontAwesome name="exchange" size={size} color={color} />
+            <FontAwesome name="gear" size={size} color={color} />
           ),
+          headerShown: false,
         }}
       />
     </Tabs>
