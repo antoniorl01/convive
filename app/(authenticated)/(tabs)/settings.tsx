@@ -8,7 +8,7 @@ const Page = () => {
     <View>
       <Text>Page</Text>
       <TouchableOpacity 
-        style={{backgroundColor: '#191919'}}
+        style={{backgroundColor: '#191919', marginTop: 80}}
         onPress={() => {
           signOut();
         }}  

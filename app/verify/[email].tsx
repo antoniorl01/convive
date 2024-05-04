@@ -1,27 +1,80 @@
 import { defaultStyles } from "@/constants/Styles";
 import { useSession } from "@/context/SessionContext";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import Colors from "@/constants/Colors";
+import { Fragment, useEffect, useState } from "react";
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from "react-native-confirmation-code-field";
+
+const CELL_COUNT = 6;
 
 const Page = () => {
   const { signIn } = useSession();
+  const { email } = useLocalSearchParams<{ email: string }>();
+  const [code, setCode] = useState("");
+
+  const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value: code,
+    setValue: setCode,
+  });
+
+  useEffect(() => {
+    if (code.length === 6) {
+      verifyCode();
+    }
+  }, [code]);
+
+  const verifyCode = async () => {
+    try {
+      console.log("verifying code");
+      signIn();
+
+      // if signin successful -> router.replace("/home") 
+      router.replace("/(authenticated)/(tabs)/home")
+    } catch (error) {
+      console.log("There was an error: ", error);
+    }
+  };
 
   return (
     <View style={defaultStyles.container}>
-      <Text style={defaultStyles.header}>6-digit code</Text>
-      <Text style={defaultStyles.descriptionText}>Code sent to your email</Text>
-      <TouchableOpacity
-        style={[styles.button, { marginBottom: 20 }]}
-        onPress={() => {
-          signIn();
-          // Navigate after signing in. You may want to tweak this to ensure sign-in is
-          // successful before navigating.
-          router.replace("/home");
-        }}
-      >
-        <Text style={{ color: Colors.dark.text, fontSize: 24 }}>Continue</Text>
-      </TouchableOpacity>
+      <View style={defaultStyles.container}>
+        <Text style={defaultStyles.header}>6-digit code</Text>
+        <Text style={defaultStyles.descriptionText}>Code sent to {email}.</Text>
+
+        <CodeField
+          ref={ref}
+          {...props}
+          value={code}
+          onChangeText={setCode}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({ index, symbol, isFocused }) => (
+            <Fragment key={index}>
+              <View
+                onLayout={getCellOnLayoutHandler(index)}
+                key={index}
+                style={[styles.cellRoot, isFocused && styles.focusCell]}
+              >
+                <Text style={styles.cellText}>
+                  {symbol || (isFocused ? <Cursor /> : null)}
+                </Text>
+              </View>
+              {index === 2 ? (
+                <View key={`separator-${index}`} style={styles.separator} />
+              ) : null}
+            </Fragment>
+          )}
+        />
+      </View>
     </View>
   );
 };
