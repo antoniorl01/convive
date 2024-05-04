@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFonts } from "expo-font";
-import { Stack, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { TouchableOpacity } from "react-native";
+import { SessionProvider } from "@/context/SessionContext";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -17,38 +17,21 @@ const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
-  const [ready, setReady] = useState(false);
   const router = useRouter();
-  const { authState } = useAuth();
-  const segments = useSegments();
 
+  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  useEffect(() => {
+    if (error) throw error;
+  }, [error]);
+
+  //Don't delete
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      setReady(true); // Marcar como listo para navegar
     }
   }, [loaded]);
 
-  useEffect(() => {
-    if (ready && authState) {
-      const inAuthGroup = segments[0] === "(authenticated)";
-      if (inAuthGroup) {
-        console.log("auth");
-        router.replace("/(authenticated)/(tabs)/home");
-      } else {
-        router.replace("/");
-      }
-    }
-  }, []);
 
-  if (!loaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   return (
     <Stack>
@@ -91,10 +74,9 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <AuthProvider>
-      <StatusBar style="auto" />
+    <SessionProvider>
       <InitialLayout />
-    </AuthProvider>
+    </SessionProvider>
   );
 };
 
