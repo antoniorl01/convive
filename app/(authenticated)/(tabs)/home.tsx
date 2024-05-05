@@ -6,18 +6,8 @@ import { Sensors } from "@/components/Sensors";
 const Page = () => {
 
   return (
-    <View style={[styles.container, { padding: 40 }]}>
+    <View style={[styles.container, { padding: 40, marginTop: 80 }]}>
       <Text>Sensores</Text>
-      <TouchableOpacity
-        style={[styles.button, { marginBottom: 20 }]}
-        onPress={() => {
-          Alert.alert("Adding new sensor");
-        }}
-      >
-        <Text style={{ color: Colors.dark.text, fontSize: 24 }}>
-          Add New Sensor
-        </Text>
-      </TouchableOpacity>
       <Sensors sensors={dataSensors} />
     </View>
   );

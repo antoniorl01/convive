@@ -1,3 +1,4 @@
+import CustomHeader from "@/components/CustomHeader";
 import Colors from "@/constants/Colors";
 import { useSession } from "@/context/SessionContext";
 import { FontAwesome } from "@expo/vector-icons";
@@ -29,7 +30,9 @@ const Layout = () => {
           tabBarIcon: ({ size, color }) => (
             <FontAwesome name="home" size={size} color={color} />
           ),
-          headerShown: false,
+          headerShown: true,
+          header: () => <CustomHeader />,
+          headerTransparent: true,
         }}
       />
       <Tabs.Screen

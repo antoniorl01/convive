@@ -1,14 +1,20 @@
-import { useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 function ListOfSensors({ sensors }: any) {
-  console.log(sensors);
-
   return (
-    <ScrollView>
+    <ScrollView style={{flex: 1, gap: 20}}>
       {sensors.map((sensor: any) => (
         <View key={sensor.id}>
-          <Text>{sensor.name}</Text>
+          <Text>name: {sensor.name}</Text>
+          <Text>uploaded_at: {sensor.first_upload.uploaded_at}</Text>
+          <Text>humidity_soil: {sensor.first_upload.humidity_soil}</Text>
+          <Text>humidity_air: {sensor.first_upload.humidity_air}</Text>
+          <Text>temperature_soil: {sensor.first_upload.temperature_soil}</Text>
+          <Text>temperature_air: {sensor.first_upload.temperature_air}</Text>
+          <Text>pH: {sensor.first_upload.pH}</Text>
+          <Text>potassium: {sensor.first_upload.potassium}</Text>
+          <Text>phosporus: {sensor.first_upload.phosporus}</Text>
+          <Text>nitrogen: {sensor.first_upload.nitrogen}</Text>
         </View>
       ))}
     </ScrollView>
@@ -21,24 +27,12 @@ function NoSensorFound({sensors}: any) {
       <Text>
         No data available. Add a sensor and start meassuring to improve your
         corps!
-      </Text>
-      <TouchableOpacity
-        onPress={() => {
-            console.log(sensors)
-        }}
-      >
-        <Text>
-          Console Log
-        </Text>
-      </TouchableOpacity>
+      </Text>     
     </View>
   );
 }
 
 export function Sensors({ sensors }: any) {
-    useEffect(() => {
-        console.log(sensors)
-      }, [])
 
   const hasSensors = sensors?.length > 0;
 
