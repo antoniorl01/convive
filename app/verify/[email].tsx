@@ -36,7 +36,7 @@ const Page = () => {
       signIn();
 
       // if signin successful -> router.replace("/home") 
-      router.replace("/(authenticated)/(tabs)/home")
+      router.replace("/home")
     } catch (error) {
       console.log("There was an error: ", error);
     }
