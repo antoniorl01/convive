@@ -76,6 +76,14 @@ const InitialLayout = () => {
         name="(authenticated)/(tabs)"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="(authenticated)/(modals)/help"
+        options={{
+          // Set the presentation mode to modal for our modal route.
+          presentation: 'modal',
+          title: "Help"
+        }}
+      />
     </Stack>
   );
 };
