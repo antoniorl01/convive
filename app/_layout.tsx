@@ -4,8 +4,8 @@ import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { TouchableOpacity } from "react-native";
 import { SessionProvider } from "@/context/SessionContext";
-import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -35,14 +35,22 @@ const InitialLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false, title: "" }} />
+      <Stack.Screen 
+        name="index" 
+        options={{ 
+          headerShown: true,
+          headerShadowVisible: false,
+          title: "", 
+          headerStyle: {backgroundColor: Colors.light.background} 
+        }} 
+      />
       <Stack.Screen
         name="sendEmail"
         options={{
           title: "",
           headerBackTitle: "",
           headerShadowVisible: false,
-          headerStyle: { backgroundColor: "#fff" },
+          headerStyle: { backgroundColor: Colors.light.background },
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons name="arrow-back" size={34} color={"#191919"} />
@@ -56,7 +64,7 @@ const InitialLayout = () => {
           title: "",
           headerBackTitle: "",
           headerShadowVisible: false,
-          headerStyle: { backgroundColor: "#fff" },
+          headerStyle: { backgroundColor: Colors.light.background },
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons name="arrow-back" size={34} color={"#191919"} />

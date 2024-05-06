@@ -6,10 +6,19 @@ export const defaultStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
     padding: 16,
+    paddingVertical: 40
   },
   header: {
-    fontSize: 40,
+    fontSize: 44,
     fontWeight: '700',
+  },
+  h3: {
+    fontSize: 32,
+    fontWeight: '500',
+  },
+  h4: {
+    fontSize: 28,
+    fontWeight: '400', 
   },
   pillButton: {
     padding: 10,
@@ -19,7 +28,7 @@ export const defaultStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textLink: {
-    color: "#f3e",
+    color: Colors.black,
     fontSize: 18,
     fontWeight: '500',
   },
@@ -57,5 +66,13 @@ export const defaultStyles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16,
     gap: 20,
+  },
+  textInput: {
+    borderColor: "gray",
+    width: "100%",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 20,
+    fontSize: 20,
   },
 });

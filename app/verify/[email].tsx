@@ -1,6 +1,6 @@
 import { defaultStyles } from "@/constants/Styles";
 import { useSession } from "@/context/SessionContext";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Fragment, useEffect, useState } from "react";
@@ -35,8 +35,8 @@ const Page = () => {
       console.log("verifying code");
       signIn();
 
-      // if signin successful -> router.replace("/home") 
-      router.replace("/home")
+      // if signin successful -> router.replace("/home")
+      router.replace("/home");
     } catch (error) {
       console.log("There was an error: ", error);
     }
@@ -44,37 +44,35 @@ const Page = () => {
 
   return (
     <View style={defaultStyles.container}>
-      <View style={defaultStyles.container}>
-        <Text style={defaultStyles.header}>6-digit code</Text>
-        <Text style={defaultStyles.descriptionText}>Code sent to {email}.</Text>
-
-        <CodeField
-          ref={ref}
-          {...props}
-          value={code}
-          onChangeText={setCode}
-          cellCount={CELL_COUNT}
-          rootStyle={styles.codeFieldRoot}
-          keyboardType="number-pad"
-          textContentType="oneTimeCode"
-          renderCell={({ index, symbol, isFocused }) => (
-            <Fragment key={index}>
-              <View
-                onLayout={getCellOnLayoutHandler(index)}
-                key={index}
-                style={[styles.cellRoot, isFocused && styles.focusCell]}
-              >
-                <Text style={styles.cellText}>
-                  {symbol || (isFocused ? <Cursor /> : null)}
-                </Text>
-              </View>
-              {index === 2 ? (
-                <View key={`separator-${index}`} style={styles.separator} />
-              ) : null}
-            </Fragment>
-          )}
-        />
-      </View>
+      <Text style={defaultStyles.header}>6-digit code</Text>
+      <Text style={defaultStyles.descriptionText}>Code sent to {email}.</Text>
+      <CodeField
+        ref={ref}
+        {...props}
+        value={code}
+        onChangeText={setCode}
+        cellCount={CELL_COUNT}
+        rootStyle={styles.codeFieldRoot}
+        keyboardType="number-pad"
+        textContentType="oneTimeCode"
+        renderCell={({ index, symbol, isFocused }) => (
+          <Fragment key={index}>
+            <View
+              onLayout={getCellOnLayoutHandler(index)}
+              key={index}
+              style={[styles.cellRoot, isFocused && styles.focusCell]}
+            >
+              <Text style={styles.cellText}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            </View>
+            {index === 2 ? (
+              <View key={`separator-${index}`} style={styles.separator} />
+            ) : null}
+          </Fragment>
+        )}
+      />
+      <Text style={[defaultStyles.textLink, {alignSelf: 'flex-end'}]}>Don't have a code? Press here</Text>
     </View>
   );
 };
