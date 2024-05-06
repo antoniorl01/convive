@@ -6,7 +6,8 @@ export const defaultStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
     padding: 16,
-    paddingVertical: 40
+    paddingTop: 20,
+    paddingBottom: 40
   },
   header: {
     fontSize: 44,
@@ -18,7 +19,7 @@ export const defaultStyles = StyleSheet.create({
   },
   h4: {
     fontSize: 28,
-    fontWeight: '400', 
+    fontWeight: '300', 
   },
   pillButton: {
     padding: 10,
@@ -28,7 +29,7 @@ export const defaultStyles = StyleSheet.create({
     alignItems: 'center',
   },
   textLink: {
-    color: Colors.black,
+    color: Colors.blue,
     fontSize: 18,
     fontWeight: '500',
   },

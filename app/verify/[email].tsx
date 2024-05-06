@@ -34,7 +34,6 @@ const Page = () => {
     try {
       console.log("verifying code");
       signIn();
-
       // if signin successful -> router.replace("/home")
       router.replace("/home");
     } catch (error) {
@@ -44,8 +43,10 @@ const Page = () => {
 
   return (
     <View style={defaultStyles.container}>
-      <Text style={defaultStyles.header}>6-digit code</Text>
-      <Text style={defaultStyles.descriptionText}>Code sent to {email}.</Text>
+      <View style={[defaultStyles.sectionHeader, { gap: 10 }]}>
+        <Text style={defaultStyles.header}>Code Validation</Text>
+        <Text style={defaultStyles.h4}>A 6-Digit Code was sent to: {email}{"\n"}</Text>
+      </View>
       <CodeField
         ref={ref}
         {...props}
@@ -72,7 +73,9 @@ const Page = () => {
           </Fragment>
         )}
       />
-      <Text style={[defaultStyles.textLink, {alignSelf: 'flex-end'}]}>Don't have a code? Press here</Text>
+      <Text style={[defaultStyles.textLink, { alignSelf: "flex-end" }]}>
+        Don't have a code? Press here
+      </Text>
     </View>
   );
 };
