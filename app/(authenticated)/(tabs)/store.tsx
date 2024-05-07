@@ -1,10 +1,9 @@
-import { View, Text } from 'react-native'
+import Products from '@/components/Products'
+import * as products from '@/data/products.json'
 
 const Page = () => {
   return (
-    <View>
-      <Text>Store</Text>
-    </View>
+    <Products products={products.products}/>
   )
 }
 
