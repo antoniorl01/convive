@@ -30,7 +30,7 @@ interface ProductProps {
 const Product: React.FC<ProductProps> = ({ product }) => {
   return (
     <View key={product.id} style={styles.item}>
-      <Image source={{ uri: product.thumbnail }} style={styles.image} />
+      <Image source={{ uri: product.thumbnail }} style={{width: 400, height: 400}} resizeMode={'cover'} />
       <View style={styles.infoContainer}>
         <Text>{product.title}</Text>
         <Text>{product.description}</Text>

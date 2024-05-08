@@ -6,6 +6,7 @@ import { TouchableOpacity } from "react-native";
 import { SessionProvider } from "@/context/SessionContext";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import { CartProvider } from "@/context/CartContext";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -31,18 +32,16 @@ const InitialLayout = () => {
     }
   }, [loaded]);
 
-
-
   return (
     <Stack>
-      <Stack.Screen 
-        name="index" 
-        options={{ 
+      <Stack.Screen
+        name="index"
+        options={{
           headerShown: true,
           headerShadowVisible: false,
-          title: "", 
-          headerStyle: {backgroundColor: Colors.light.background} 
-        }} 
+          title: "",
+          headerStyle: { backgroundColor: Colors.light.background },
+        }}
       />
       <Stack.Screen
         name="sendEmail"
@@ -80,8 +79,8 @@ const InitialLayout = () => {
         name="(authenticated)/(modals)/help"
         options={{
           // Set the presentation mode to modal for our modal route.
-          presentation: 'modal',
-          title: "Help"
+          presentation: "modal",
+          title: "Help",
         }}
       />
     </Stack>
@@ -91,7 +90,9 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <SessionProvider>
-      <InitialLayout />
+      <CartProvider>
+        <InitialLayout />
+      </CartProvider>
     </SessionProvider>
   );
 };

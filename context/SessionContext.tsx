@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
 
+// 1. Create
 const SessionContext = createContext<{
     signIn: () => void;
     signOut: () => void;
@@ -13,18 +14,7 @@ const SessionContext = createContext<{
     isLoading: false,
 });
 
-
-export function useSession() {
-    const value = useContext(SessionContext);
-    if (process.env.NODE_ENV !== 'production') {
-      if (!value) {
-        throw new Error('useSession must be wrapped in a <SessionProvider />');
-      }
-    }
-  
-    return value;
-}
-
+// 2. Provide
 export const SessionProvider = ({ children }: any) => {
   const [[isLoading, session], setSession] = useStorageState('session');
 
@@ -44,5 +34,14 @@ export const SessionProvider = ({ children }: any) => {
   );
 };
 
-// New User or Old User -> Clicks Comenzar -> Enters email -> Click Button -> Email Is Sent With Code -> User Writes Code -> Validates Code Is Correct
-// User Wants to Log Out -> Click button log out -> Redirect to index page
+// 3. Consume -> useContext(SessionProvider)
+export function useSession() {
+  const value = useContext(SessionContext);
+  if (process.env.NODE_ENV !== 'production') {
+    if (!value) {
+      throw new Error('useSession must be wrapped in a <SessionProvider />');
+    }
+  }
+
+  return value;
+}
