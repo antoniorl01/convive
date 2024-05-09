@@ -1,6 +1,7 @@
-import Colors from '@/constants/Colors';
-import { useCart } from '@/context/CartContext';
-import React from 'react';
+import Colors from "@/constants/Colors";
+import { defaultStyles } from "@/constants/Styles";
+import { useCart } from "@/context/CartContext";
+import React from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,7 +11,7 @@ import {
   Image,
   View,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
 interface ProductData {
   id: number;
@@ -34,17 +35,24 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
   return (
     <View key={product.id} style={styles.item}>
-      <Image source={{ uri: product.thumbnail }} style={{width: 60, height: 60}} resizeMode={'cover'} />
-      <View style={styles.infoContainer}>
-        <Text>{product.title}</Text>
-        <Text>{product.description}</Text>
-        <Text>${product.price}</Text>
+      <Image
+        source={require("@/assets/images/cup.png")}
+        style={{ width: 180, height: 280 }}
+        resizeMode={"cover"}
+      />
+      <View style={{display: "flex", flexDirection: 'row', gap: 10}}>
+        <View>
+          <Text style={[defaultStyles.h4]}>{product.title}</Text>
+          <Text style={{fontSize: 50, fontWeight: '700', color: Colors.dark.text}}>${product.price}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            addToCart;
+          }}
+        >
+          <Text>+</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={{height: 30, width: 30, backgroundColor: Colors.black}} onPress={() => { 
-        addToCart
-      }}>
-        <Text>+</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -53,7 +61,9 @@ const Products: React.FC<{ products: ProductData[] }> = ({ products }) => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        style={styles.container}
+        contentContainerStyle={{ gap: gap, justifyContent: 'center', alignItems: 'center' }}
+        columnWrapperStyle={{ gap: gap }}
+        numColumns={2}
         data={products}
         keyExtractor={(product) => String(product.id)}
         renderItem={({ item }) => <Product product={item} />}
@@ -62,30 +72,22 @@ const Products: React.FC<{ products: ProductData[] }> = ({ products }) => {
   );
 };
 
+const windowsWidth = Dimensions.get('window').width;
+const width = windowsWidth * 0.45;
+const height = Dimensions.get('window').height * 0.4;
+const gap = windowsWidth * 0.05;
+
 const styles = StyleSheet.create({
+  item: {
+    backgroundColor: "#ffd1de",
+    borderRadius: 40,
+    height: height,
+    width: width,
+    
+  },
   container: {
     flex: 1,
-    marginTop: 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  image: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  infoContainer: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 32,
-  },
+  }
 });
 
 export default Products;
