@@ -1,3 +1,5 @@
+import Colors from '@/constants/Colors';
+import { useCart } from '@/context/CartContext';
 import React from 'react';
 import {
   SafeAreaView,
@@ -28,15 +30,19 @@ interface ProductProps {
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {
+  const { addToCart } = useCart();
+
   return (
     <View key={product.id} style={styles.item}>
-      <Image source={{ uri: product.thumbnail }} style={{width: 400, height: 400}} resizeMode={'cover'} />
+      <Image source={{ uri: product.thumbnail }} style={{width: 60, height: 60}} resizeMode={'cover'} />
       <View style={styles.infoContainer}>
         <Text>{product.title}</Text>
         <Text>{product.description}</Text>
         <Text>${product.price}</Text>
       </View>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity style={{height: 30, width: 30, backgroundColor: Colors.black}} onPress={() => { 
+        addToCart
+      }}>
         <Text>+</Text>
       </TouchableOpacity>
     </View>
@@ -55,8 +61,6 @@ const Products: React.FC<{ products: ProductData[] }> = ({ products }) => {
     </SafeAreaView>
   );
 };
-
-const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
