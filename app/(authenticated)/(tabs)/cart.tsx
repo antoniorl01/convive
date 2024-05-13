@@ -19,7 +19,7 @@ const Page = () => {
         {cart.length >= 0 &&
           cart.map((product: any) => {
             return (
-              <View key={product.id} style={{ backgroundColor: "#f9eba6", flexDirection: 'row',  }}>
+              <View key={product.id} style={{ backgroundColor: "#f9eba6", flexDirection: 'column',  }}>
                 <Image
                   source={require("@/assets/images/cup.png")}
                   style={{ width: 200, height: 200 }}

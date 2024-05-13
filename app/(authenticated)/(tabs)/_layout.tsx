@@ -4,6 +4,7 @@ import { useSession } from "@/context/SessionContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { Text } from "react-native";
+import 'react-native-reanimated';
 
 const Layout = () => {
   const { session, isLoading } = useSession();
