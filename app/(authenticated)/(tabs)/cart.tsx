@@ -1,51 +1,65 @@
-import Colors from "@/constants/Colors";
-import { defaultStyles } from "@/constants/Styles";
 import { useCart } from "@/context/CartContext";
-import { View, Text, Image, ScrollView } from "react-native";
-import { TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, Text, StyleSheet, Button, View } from "react-native";
+import { CartProduct } from "@/reducers/cart";
 
 const Page = () => {
   const { cart, removeFromCart, addToCart, clearCart } = useCart();
 
-  if (cart === undefined) {
-    return <Text>No hay ningun producto</Text>;
-  }
+  const renderCartItem = ({ item }: { item: CartProduct }) => (
+    <View style={styles.cartItem}>
+      <Text style={styles.productName}>{item.product.name}</Text>
+      <Text style={styles.productPrice}>Price: ${item.product.price}</Text>
+      <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
+      <Button title="Remove" onPress={() => removeFromCart(item.product, 1)} />
+    </View>
+  );
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView style={{flex: 1, backgroundColor: Colors.light.background}}>
-        {cart.length === 0 && <Text>No items in the Cart</Text>}
-        {cart.length >= 0 &&
-          cart.map((product: any) => {
-            return (
-              <View key={product.id} style={{ backgroundColor: "#f9eba6", flexDirection: 'column',  }}>
-                <Image
-                  source={require("@/assets/images/cup.png")}
-                  style={{ width: 200, height: 200 }}
-                  resizeMode="cover"
-                />
-                <View>
-                  <Text style={[defaultStyles.h3]}>{product.title}</Text>
-                  <Text style={[defaultStyles.h4]}>{product.quantity}</Text>
-                </View>
-                <TouchableOpacity onPress={addToCart} style={{width: 50, height: 50}}>
-                  <Text style={defaultStyles.h4}>+</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={removeFromCart} style={{width: 50, height: 50}}>
-                  <Text style={defaultStyles.h4}>-</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        {cart.lenght >= 0 && (
-          <TouchableOpacity onPress={clearCart} style={{backgroundColor: Colors.lightBlue}}>
-            <Text>Clear</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      {!(cart?.cart === null || cart?.cart === undefined) ? (
+        <View>
+          <FlatList
+            data={cart.cart}
+            renderItem={(item) => renderCartItem(item)}
+            keyExtractor={(item) => item.product.id.toString()}
+          />
+          <Button title="Clear Cart" onPress={() => {
+            console.log(cart)
+            clearCart;
+          }} />
+        </View>
+      ) : (
+        <Text>No products in the cart</Text>
+      )}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  cartItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingBottom: 10,
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  productPrice: {
+    fontSize: 14,
+  },
+  productQuantity: {
+    fontSize: 14,
+  },
+});
 
 export default Page;

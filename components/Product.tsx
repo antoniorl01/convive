@@ -1,4 +1,6 @@
 import { defaultStyles } from "@/constants/Styles";
+import { useCart } from "@/context/CartContext";
+import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 export interface IProduct {
@@ -10,35 +12,49 @@ export interface IProduct {
 }
 
 const Product = ({ item }: { item: IProduct }) => {
+  const { addToCart } = useCart();
+  const [counter, setCounter] = useState(0);
+
+  const addCounter = () => {
+    setCounter(counter + 1);
+  };
+
+  const removeCounter = () => {
+    if (counter <= 1) return;
+    setCounter(counter - 1);
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => {
-        console.log(item.name + "was added");
-      }}
-      style={styles.container}
-    >
-      <View key={item.id} style={styles.circle}>
-        <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <Text style={defaultStyles.h3}>{item.name}</Text>
-          <Text style={defaultStyles.h3}>${item.price}</Text>
+    <View style={styles.page}>
+      <TouchableOpacity style={styles.container}>
+        <View key={item.id}>
+          <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+            <Text style={defaultStyles.h3}>{item.name}</Text>
+            <Text style={defaultStyles.h3}>${item.price}</Text>
+            <Text style={defaultStyles.h3}>{counter}</Text>
+            <TouchableOpacity onPress={addCounter}>
+              <Text style={defaultStyles.h3}>+</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={removeCounter}>
+              <Text style={defaultStyles.h3}>-</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => addToCart(item, counter)}>
+              <Text style={[defaultStyles.h3, {backgroundColor: "f9eba6"}]}>ADD</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    gap: 10,
+  page: {
+    flex: 1,
   },
-  circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#191919",
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    alignItems: "flex-start",
+    gap: 10,
   },
 });
 

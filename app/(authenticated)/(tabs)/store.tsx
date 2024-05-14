@@ -1,9 +1,8 @@
-import Products from '@/components/Products'
-import * as products from '@/data/products.json'
+import ListOfProducts from "@/components/ListOfProducts"
 
 const Page = () => {
   return (
-    <Products products={products.products}/>
+    <ListOfProducts />
   )
 }
 
