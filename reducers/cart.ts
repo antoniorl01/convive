@@ -45,7 +45,7 @@ export function cartReducer(state: CartState, action: CartAction) {
       const idToAdd = payload!.product.id;
 
       if (!state.cart) {
-        const updatedCart = [{ product: payload!.product, quantity: 1 }];
+        const updatedCart = [{ product: payload!.product, quantity: action.payload?.quantity! }];
         updateLocalStorage({ cart: updatedCart });
         return { cart: updatedCart };
       }
@@ -58,7 +58,7 @@ export function cartReducer(state: CartState, action: CartAction) {
         // Clonamos el estado anterior y actualizamos la cantidad del producto existente
         const updatedCart = state.cart.map((product, index) =>
           index === existingProductIndex
-            ? { ...product, quantity: product.quantity + 1 }
+            ? { ...product, quantity: product.quantity + action.payload?.quantity! } // we add how many we want, use ! because other action can be null
             : product
         );
         updateLocalStorage({ cart: updatedCart });
