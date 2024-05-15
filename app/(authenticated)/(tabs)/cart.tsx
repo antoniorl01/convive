@@ -4,30 +4,42 @@ import { FlatList, Text, StyleSheet, Button, View } from "react-native";
 import { CartProduct } from "@/reducers/cart";
 
 const Page = () => {
-  const { cart, removeFromCart, addToCart, clearCart } = useCart();
+  const { cart, removeFromCart, addToCart, clearCart, reduceFromCart } =
+    useCart();
 
   const renderCartItem = ({ item }: { item: CartProduct }) => (
     <View style={styles.cartItem}>
       <Text style={styles.productName}>{item.product.name}</Text>
       <Text style={styles.productPrice}>Price: ${item.product.price}</Text>
       <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
-      <Button title="Remove" onPress={() => removeFromCart(item.product, 1)} />
+      <Button title="+" onPress={() => addToCart(item.product, 1)} />
+      <Button title="-" onPress={() => reduceFromCart(item.product, 1)} />
+      <Button
+        title="Remove"
+        onPress={() => removeFromCart(item.product, item.quantity)}
+      />
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      {!(cart?.cart === null || cart?.cart === undefined) ? (
+      {!(
+        cart?.cart === null ||
+        cart?.cart === undefined ||
+        cart?.cart.length === 0
+      ) ? (
         <View>
           <FlatList
             data={cart.cart}
             renderItem={(item) => renderCartItem(item)}
             keyExtractor={(item) => item.product.id.toString()}
           />
-          <Button title="Clear Cart" onPress={() => {
-            console.log(cart)
-            clearCart;
-          }} />
+          <Button
+            title="Clear Cart"
+            onPress={() => {
+              clearCart();
+            }}
+          />
         </View>
       ) : (
         <Text>No products in the cart</Text>
