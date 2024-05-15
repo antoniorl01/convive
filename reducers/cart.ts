@@ -3,8 +3,9 @@ import { setStorageItemAsync } from "@/hooks/useStorageState";
 
 import * as SecureStore from "expo-secure-store";
 
-
-const cartFromStorage = JSON.parse(SecureStore.getItem("cart")!) as CartState | null;
+const cartFromStorage = JSON.parse(
+  SecureStore.getItem("cart")!
+) as CartState | null;
 export const cartInitialState: CartState = cartFromStorage ?? { cart: [] };
 
 //Possible Actions
@@ -45,7 +46,9 @@ export function cartReducer(state: CartState, action: CartAction) {
       const idToAdd = payload!.product.id;
 
       if (!state.cart) {
-        const updatedCart = [{ product: payload!.product, quantity: action.payload?.quantity! }];
+        const updatedCart = [
+          { product: payload!.product, quantity: action.payload?.quantity! },
+        ];
         updateLocalStorage({ cart: updatedCart });
         return { cart: updatedCart };
       }
@@ -58,7 +61,10 @@ export function cartReducer(state: CartState, action: CartAction) {
         // Clonamos el estado anterior y actualizamos la cantidad del producto existente
         const updatedCart = state.cart.map((product, index) =>
           index === existingProductIndex
-            ? { ...product, quantity: product.quantity + action.payload?.quantity! } // we add how many we want, use ! because other action can be null
+            ? {
+                ...product,
+                quantity: product.quantity + action.payload?.quantity!,
+              } // we add how many we want, use ! because other action can be null
             : product
         );
         updateLocalStorage({ cart: updatedCart });
@@ -74,6 +80,9 @@ export function cartReducer(state: CartState, action: CartAction) {
       }
 
     case CartActionKind.REMOVE:
+      console.log("remove");
+      console.log(action);
+
       const idToRemove = payload!.product.id;
       const updatedCart = state.cart.filter(
         (product) => product.product.id !== idToRemove
@@ -82,21 +91,32 @@ export function cartReducer(state: CartState, action: CartAction) {
       return { cart: updatedCart }; // Devolvemos un nuevo estado con el carrito actualizado
 
     case CartActionKind.REDUCE:
-      // Reducir la cantidad de un producto en 1 y eliminarlo si la cantidad llega a 0
-      const newState = state.cart
-        .map((product) =>
-          product.product.id === payload!.product.id
+
+      const productIndex = state.cart.findIndex(
+        (product) => product.product.id === payload!.product.id
+      );
+
+      if (productIndex !== -1) {
+        const updatedCart = state.cart.map((product, index) =>
+          index === productIndex
             ? { ...product, quantity: product.quantity - 1 }
             : product
-        )
-        .filter((product) => product.quantity > 0); // Eliminar productos con cantidad 0
+        );
 
-      updateLocalStorage({ cart: newState });
-      return { cart: newState }; // Devolver un nuevo estado con el carrito actualizado
+        // Filtra los productos con cantidad mayor a 0
+        const updatedCartNonZero = updatedCart.filter(
+          (product) => product.quantity > 0
+        );
+
+        updateLocalStorage({ cart: updatedCartNonZero });
+        return { cart: updatedCartNonZero };
+      }
+
+      return state;
 
     case CartActionKind.CLEAR:
-      updateLocalStorage({ cart: [] }); // Limpiamos el almacenamiento local
-      return { cart: [] }; // Devolvemos un nuevo estado con el carrito vacío
+      updateLocalStorage({ cart: [] });
+      return { cart: [] };
 
     default:
       return state;

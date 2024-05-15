@@ -13,7 +13,7 @@ const Page = () => {
       <Text style={styles.productPrice}>Price: ${item.product.price}</Text>
       <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
       <Button title="+" onPress={() => addToCart(item.product, 1)} />
-      <Button title="-" onPress={() => reduceFromCart(item.product, 1)} />
+      <Button title="-" onPress={() => reduceFromCart(item.product)} />
       <Button
         title="Remove"
         onPress={() => removeFromCart(item.product, item.quantity)}
