@@ -18,7 +18,7 @@ const Page = () => {
   const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 
   function getToken(email: string) {
-    fetch("https://localhost:8080/api/v1/token", {
+    fetch("https://6885-2a0c-5a82-320a-300-bc0a-86c8-4840-d5e.ngrok-free.app/api/v1/token", {
       method: "POST",
       body: JSON.stringify({
         email: email,

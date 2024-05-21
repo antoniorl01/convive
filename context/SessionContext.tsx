@@ -4,33 +4,37 @@ import axios from "axios";
 
 // 1. Create
 const SessionContext = createContext<{
-    signIn: (email: string, code: number) => void;
-    signOut: () => void;
-    session?: string | null;
-    isLoading: boolean;
-  }>({
-    signIn: () => null,
-    signOut: () => null,
-    session: null,
-    isLoading: false,
+  signIn: (email: string, code: number) => void;
+  signOut: () => void;
+  session?: string | null;
+  isLoading: boolean;
+}>({
+  signIn: () => null,
+  signOut: () => null,
+  session: null,
+  isLoading: false,
 });
 
 // 2. Provide
 export const SessionProvider = ({ children }: any) => {
-  const [[isLoading, session], setSession] = useStorageState('session');
+  const [[isLoading, session], setSession] = useStorageState("session");
 
   const signIn = async (email: string, code: number) => {
     try {
-      const response = await axios.post('http://10.0.2.2:8080/api/v1/login', { email, code });
+      const response = await axios.post(
+        "https://6885-2a0c-5a82-320a-300-bc0a-86c8-4840-d5e.ngrok-free.app/api/v1/login",
+        { email, code }
+      );
 
-      if (response.data.token != null) {
-        const token = response.data.token;  
+      const { token } = response.data;
+      if (token) {
         setSession(token);
       } else {
-        throw Error("not valid code")
+        throw new Error("Invalid code");
       }
     } catch (error) {
-      console.error('Error during sign in:', error);
+      console.error("Error during sign in:", error);
+      throw error; // Rethrow the error to be handled by the calling function
     }
   };
 
@@ -38,12 +42,11 @@ export const SessionProvider = ({ children }: any) => {
     setSession(null);
   };
 
-
   const value = {
     signIn,
     signOut,
     session,
-    isLoading
+    isLoading,
   };
 
   return (
@@ -54,9 +57,9 @@ export const SessionProvider = ({ children }: any) => {
 // 3. Consume -> useContext(SessionProvider)
 export function useSession() {
   const value = useContext(SessionContext);
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     if (!value) {
-      throw new Error('useSession must be wrapped in a <SessionProvider />');
+      throw new Error("useSession must be wrapped in a <SessionProvider />");
     }
   }
 
