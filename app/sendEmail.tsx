@@ -17,6 +17,21 @@ const Page = () => {
 
   const regex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 
+  function getToken(email: string) {
+    fetch("https://localhost:8080/api/v1/token", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json))
+      .catch(Error => console.log(Error));
+  }
+
   return (
     <View style={[defaultStyles.container]}>
       <KeyboardAvoidingView behavior="padding" style={{ gap: 20 }}>
@@ -41,9 +56,13 @@ const Page = () => {
       </KeyboardAvoidingView>
       <View style={{ flex: 1 }} />
       <TouchableOpacity
-        style={[defaultStyles.pillButton, validEmail ? styles.buttonActive : styles.buttonDisabled]}
+        style={[
+          defaultStyles.pillButton,
+          validEmail ? styles.buttonActive : styles.buttonDisabled,
+        ]}
         disabled={!validEmail}
         onPress={() => {
+          getToken(email);
           router.push({
             pathname: "/verify/[email]",
             params: { email: email },
@@ -58,11 +77,11 @@ const Page = () => {
 
 const styles = StyleSheet.create({
   buttonActive: {
-    backgroundColor: Colors.black
+    backgroundColor: Colors.black,
   },
   buttonDisabled: {
-    backgroundColor: "#E7E7E7"
-  }
-})
+    backgroundColor: "#E7E7E7",
+  },
+});
 
 export default Page;

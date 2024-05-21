@@ -1,6 +1,6 @@
 import { defaultStyles } from "@/constants/Styles";
 import { useSession } from "@/context/SessionContext";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Fragment, useEffect, useState } from "react";
@@ -32,14 +32,14 @@ const Page = () => {
 
   const verifyCode = async () => {
     try {
-      console.log("verifying code");
-      signIn();
-      // if signin successful -> router.replace("/home")
+      signIn(email!, parseInt(code));
       router.replace("/home");
     } catch (error) {
       console.log("There was an error: ", error);
+      Alert.alert("Error", "Invalid code. Please try again.");
     }
   };
+
 
   return (
     <View style={defaultStyles.container}>
