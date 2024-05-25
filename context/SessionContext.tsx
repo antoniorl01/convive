@@ -18,17 +18,19 @@ const SessionContext = createContext<{
 // 2. Provide
 export const SessionProvider = ({ children }: any) => {
   const [[isLoading, session], setSession] = useStorageState("session");
+  const [[isLoadingEmail, sessionEmail], setSessionEmail] = useStorageState("email");
 
   const signIn = async (email: string, code: number) => {
     try {
       const response = await axios.post(
-        "https://6885-2a0c-5a82-320a-300-bc0a-86c8-4840-d5e.ngrok-free.app/api/v1/login",
+        "https://8b86-2a0c-5a82-320a-300-f801-6ce8-c914-2be1.ngrok-free.app/api/v1/login",
         { email, code }
       );
 
       const { token } = response.data;
       if (token) {
         setSession(token);
+        setSessionEmail(email);
       } else {
         throw new Error("Invalid code");
       }

@@ -1,11 +1,79 @@
 import { useCart } from "@/context/CartContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Text, StyleSheet, Button, View } from "react-native";
+import { FlatList, Text, StyleSheet, Button, View, Alert } from "react-native";
 import { CartProduct } from "@/reducers/cart";
+import { useState } from "react";
+import { CardField, CardFieldInput, useConfirmPayment } from "@stripe/stripe-react-native";
+import { useSession } from "@/context/SessionContext"; 
+import * as SecureStore from "expo-secure-store";
+
+
+const getEmail = async () => {
+  // Replace with your token retrieval logic
+  return await SecureStore.getItem('email');
+};
 
 const Page = () => {
-  const { cart, removeFromCart, addToCart, clearCart, reduceFromCart } =
-    useCart();
+
+  const { cart, removeFromCart, addToCart, clearCart, reduceFromCart } = useCart();
+  const { session } = useSession();
+
+  const [cardDetails, setCardDetails] = useState<CardFieldInput.Details | null>(null);
+  const { confirmPayment, loading } = useConfirmPayment();
+
+  const fetchPaymentIntentClientSecret = async () => {
+    const response = await fetch(`https://8b86-2a0c-5a82-320a-300-f801-6ce8-c914-2be1.ngrok-free.app/api/v1/create-payment-intent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `${session}`,
+      },
+      body: JSON.stringify({ items: cart!.cart, payment_method_type: "card" }), 
+    });
+
+    const result = await response.json();
+    const { client_secret: clientSecret, error } = result;
+    return { clientSecret, error };
+  };
+
+  const handlePayPress = async () => {
+    // Gather the customer's billing information
+    if (!cardDetails?.complete) {
+      Alert.alert("Please enter Complete card details and Email");
+      return;
+    }
+
+    const email = await getEmail();
+
+    const billingDetails = {
+      email: email!,
+    };
+
+    // Fetch the intent client secret from the backend
+    try {
+      const { clientSecret, error } = await fetchPaymentIntentClientSecret();
+      // Confirm the payment
+      if (error) {
+        console.log("Unable to process payment");
+      } else {
+        const { paymentIntent, error } = await confirmPayment(clientSecret, {
+          paymentMethodType: "Card",
+          paymentMethodData: {
+            billingDetails
+          }
+        });
+        if (error) {
+          alert(`Payment Confirmation Error ${error.message}`);
+        } else if (paymentIntent) {
+          alert("Payment Successful");
+          console.log("Payment successful ", paymentIntent);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    // Confirm the payment with the card details
+  };
 
   const renderCartItem = ({ item }: { item: CartProduct }) => (
     <View style={styles.cartItem}>
@@ -23,15 +91,11 @@ const Page = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {!(
-        cart?.cart === null ||
-        cart?.cart === undefined ||
-        cart?.cart.length === 0
-      ) ? (
+      {cart && cart.cart && cart.cart.length > 0 ? (
         <View>
           <FlatList
             data={cart.cart}
-            renderItem={(item) => renderCartItem(item)}
+            renderItem={renderCartItem}
             keyExtractor={(item) => item.product.id.toString()}
           />
           <Button
@@ -40,6 +104,14 @@ const Page = () => {
               clearCart();
             }}
           />
+          <CardField
+            placeholders={{ number: "4242 4242 4242 4242" }}
+            onCardChange={(cardDetails) => {
+              setCardDetails(cardDetails);
+            }}
+            style={styles.cardContainer}
+          />
+        <Button onPress={handlePayPress} title="Pay" disabled={loading} />
         </View>
       ) : (
         <Text>No products in the cart</Text>
@@ -71,6 +143,13 @@ const styles = StyleSheet.create({
   },
   productQuantity: {
     fontSize: 14,
+  },
+  card: {
+    backgroundColor: "#efefefef",
+  },
+  cardContainer: {
+    height: 50,
+    marginVertical: 30,
   },
 });
 
