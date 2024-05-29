@@ -62,7 +62,7 @@ const Page = () => {
         ]}
         disabled={!validEmail}
         onPress={() => {
-          getToken(email);
+          //getToken(email);
           router.push({
             pathname: "/verify/[email]",
             params: { email: email },

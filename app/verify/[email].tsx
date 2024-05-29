@@ -32,7 +32,7 @@ const Page = () => {
 
   const verifyCode = async () => {
     try {
-      await signIn(email!, parseInt(code));
+      //await signIn(email!, parseInt(code));
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", "Invalid code. Please try again.");

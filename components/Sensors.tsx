@@ -1,40 +1,100 @@
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView, Text, StyleSheet, View } from "react-native";
+import LineGraph from "./LineGraph";
+import Colors from "@/constants/Colors";
 
-function ListOfSensors({ sensors }: any) {
+export const ListOfSensors = ({sensor}: SensorDataComponentProps) => {
+  const groupedData = groupDataByType(sensor.data);
+
   return (
     <ScrollView style={{flex: 1, gap: 20}}>
-      {sensors.map((sensor: any) => (
-        <View key={sensor.id}>
-          <Text>name: {sensor.name}</Text>
-          <Text>uploaded_at: {sensor.first_upload.uploaded_at}</Text>
-          <Text>humidity_soil: {sensor.first_upload.humidity_soil}</Text>
-          <Text>humidity_air: {sensor.first_upload.humidity_air}</Text>
-          <Text>temperature_soil: {sensor.first_upload.temperature_soil}</Text>
-          <Text>temperature_air: {sensor.first_upload.temperature_air}</Text>
-          <Text>pH: {sensor.first_upload.pH}</Text>
-          <Text>potassium: {sensor.first_upload.potassium}</Text>
-          <Text>phosporus: {sensor.first_upload.phosporus}</Text>
-          <Text>nitrogen: {sensor.first_upload.nitrogen}</Text>
+      <Text style={styles.header}>Sensor: {sensor.name}</Text>
+      {Object.keys(groupedData).map((type) => (
+        <View key={type} style={styles.section}>
+          <Text style={styles.type}>{type}</Text>
+          <LineGraph
+            data={groupedData[type]}
+            colorStoke={Colors.blue}
+            colorGradient={Colors.lightBlue}
+            label={type}
+            unit="ºC"
+          />
         </View>
       ))}
     </ScrollView>
   );
 }
 
-function NoSensorFound({sensors}: any) {
-  return (
-    <View>
-      <Text>
-        No data available. Add a sensor and start meassuring to improve your
-        corps!
-      </Text>     
-    </View>
-  );
+interface SensorData {
+  time: string;
+  s_temperature: number;
+  s_humidity: number;
+  s_conductivity: number;
+  s_nitrogen: number;
+  s_phosphorus: number;
+  s_potassium: number;
+  s_pH: number;
+  s_tensiometer: number;
+  a_temperature: number;
+  a_humidity: number;
+  wind_speed: number;
+  wind_direction: number;
+  light_intensity: number;
+  co2: number;
 }
 
-export function Sensors({ sensors }: any) {
-
-  const hasSensors = sensors?.length > 0;
-
-  return hasSensors ? <ListOfSensors sensors={sensors} /> : <NoSensorFound sensors={sensors}/>;
+interface Sensor {
+  sensor_id: string;
+  name: string;
+  data: SensorData[];
 }
+
+interface SensorDataComponentProps {
+  sensor: Sensor;
+}
+
+const groupDataByType = (data: SensorData[]) => {
+  const groupedData: { [key: string]: number[] } = {};
+
+  data.forEach((entry) => {
+    Object.keys(entry).forEach((key) => {
+      if (!groupedData[key]) {
+        groupedData[key] = [];
+      }
+      if (typeof entry[key as keyof SensorData] === 'number') {
+        groupedData[key].push(entry[key as keyof SensorData] as number);
+      }
+    });
+  });
+
+  return groupedData;
+};
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  subHeader: {
+    fontSize: 18,
+    marginBottom: 16,
+  },
+  section: {
+    marginBottom: 16,
+  },
+  type: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  value: {
+    fontSize: 16,
+    marginBottom: 4,
+  },
+});
+

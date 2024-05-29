@@ -10,6 +10,7 @@ export type LineGraphProps = {
   colorGradient: string;
   label: string;
   style?: StyleProp<ViewStyle>;
+  unit: string
 };
 
 const GRAPH_ASPECT_RATIO = 9 / 16;
@@ -82,7 +83,7 @@ export function LineGraph(props: LineGraphProps) {
           adjustsFontSizeToFit
           style={[{ fontSize: 34, fontWeight: "300" }]}
         >
-          {stat}ºC
+          {stat}{props.unit}
         </Text>
       </View>
       <Svg

@@ -1,22 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import dataSensors from "@/data/sensors.json";
+import { View, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
-import { Sensors } from "@/components/Sensors";
-import LineGraph from "@/components/LineGraph";
 import Dropdown from "@/components/DropDown";
-import datos from '@/data/sensors.json'
 
 
 const Page = () => {
   return (
     <View style={[styles.container, { padding: 40, marginTop: 80 }]}>
-      <Dropdown datos={datos}/>
-      <LineGraph
-        data={[12, 5, 9, 30, 20, 51, 20, 1, 4, 2, 70]}
-        colorStoke={Colors.blue}
-        colorGradient={Colors.lightBlue}
-        label='Soil Temperature'
-      />
+      <Dropdown />
     </View>
   );
 };
