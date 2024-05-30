@@ -73,7 +73,7 @@ const InitialLayout = () => {
       />
       <Stack.Screen
         name="(authenticated)/(tabs)"
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false}}
       />
       <Stack.Screen
         name="(authenticated)/(modals)/help"
