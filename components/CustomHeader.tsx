@@ -46,9 +46,11 @@ const CustomHeader = () => {
           <Ionicons style={styles.searchIcon} name="search" size={20} />
           <TextInput placeholder="Search" />
         </View>
-        <View style={styles.circle}>
-          <Ionicons name={"add"} size={20} />
-        </View>
+        <Link href={"/(authenticated)/(modals)/addSensor"} >
+          <View style={styles.circle}>
+            <Ionicons name={"add"} size={20} />
+          </View>
+        </Link>
         <View style={styles.circle}>
           <Link href={"/(authenticated)/(modals)/help"} style={{}}>
             <Ionicons name={"help"} size={20} />

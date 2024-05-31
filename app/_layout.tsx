@@ -81,6 +81,15 @@ const InitialLayout = () => {
           // Set the presentation mode to modal for our modal route.
           presentation: "modal",
           title: "Help",
+          
+        }}
+      />
+      <Stack.Screen
+        name="(authenticated)/(modals)/addSensor"
+        options={{
+          // Set the presentation mode to modal for our modal route.
+          presentation: "modal",
+          title: "addSensor",
         }}
       />
     </Stack>
